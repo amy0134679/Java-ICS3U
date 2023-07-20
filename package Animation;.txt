@@ -1,0 +1,72 @@
+package Animation;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.application.Platform;
+import java.util.TimerTask;
+import java.util.Timer;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.Scene;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Label;
+import javafx.beans.value.ChangeListener;
+
+
+public class Animation extends Application {
+	BorderPane mainPane = new BorderPane();
+	Scene scene = new Scene(mainPane);
+	Timer timer = new Timer();
+ 	int num = 0; 
+ 		
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+	public void start(Stage primaryStage) {
+        Slider number = new Slider(1, 25, 50);
+        Label value = new Label("");
+        
+        number.setShowTickMarks(true);
+        number.setShowTickLabels(true);
+        number.setMajorTickUnit(1);
+        number.setBlockIncrement(1);
+        number.setSnapToTicks(true);
+
+        number.valueProperty().addListener((intialVal, oldValue, newValue) -> {
+	  		timer.cancel();
+	  		timer = new java.util.Timer();
+	  		timer.scheduleAtFixedRate(new AnimationTask(), 10, 2000 / newValue.longValue());
+   		});
+       
+        mainPane.setBottom(number);
+ 		primaryStage.setTitle("Animation");
+ 		mainPane.setPrefSize(500,400);
+		primaryStage.setScene(scene);
+		primaryStage.show();  
+	}
+	
+ 	private class AnimationTask extends TimerTask {
+	
+        public void run() {
+            Platform.runLater(() -> {   	
+           	if (num < 7) {
+		    	Image image = new Image(num + ".png"); 
+		    	ImageView imageView = new ImageView(image);
+				mainPane.setCenter(imageView);
+		    		num++;
+		   	} else { 
+		   		num = 0;	
+			}
+		}); 
+	  } 
+   }
+}
+
+
+
+
+
+
